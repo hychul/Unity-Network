@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 public class TransportTCP : ITransport {
@@ -103,7 +104,8 @@ public class TransportTCP : ITransport {
 			socket.Connect(address, port);
 
 			isConnected = true;
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			socket = null;
 			isConnected = false;
 		}

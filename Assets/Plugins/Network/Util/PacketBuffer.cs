@@ -23,7 +23,8 @@ public class PacketBuffer {
 			memoryStream.Position = offset;
 			memoryStream.Write(data, 0, size);
 			offset += size;
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			memoryStream.Flush();
 			offset = 0;
 			return false;
@@ -51,7 +52,8 @@ public class PacketBuffer {
 
 			memoryStream = new MemoryStream(restStream);
 			offset = restSize;
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return null;
 		}
 		return data;
@@ -63,7 +65,8 @@ public class PacketBuffer {
 		try {
 			memoryStream.Position = 0;
 			memoryStream.Read(data, 0, size);
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return 0;
 		}
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -15,7 +16,8 @@ public class SessionUDP : Session<TransportUDP> {
 		try {
 			listener = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			listener.Bind(new IPEndPoint(IPAddress.Any, port));
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return false;
 		}
 		
@@ -81,7 +83,7 @@ public class SessionUDP : Session<TransportUDP> {
 
 			IPEndPoint transportEp = transport.GetRemoteEndPoint();
 			if (transportEp != null) {
-				NetworkLogger.Log("[session udp] recv " + " end point: " + endPoint.ToString() + " node: " + node + " transport: " + transportEp.ToString());
+				NetworkLogger.Log("[session udp] recv end point: " + endPoint.ToString() + " node: " + node + " transport: " + transportEp.ToString());
 				if (transportEp.Port == endPoint.Port && transportEp.Address.ToString() == endPoint.Address.ToString()) {
 					return node;
 				}

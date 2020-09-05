@@ -45,7 +45,8 @@ public class Serializer {
 
 		try {
 			buffer.Write(data, 0, data.Length);
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return false;
 		}
 
@@ -300,7 +301,8 @@ public class Serializer {
 			buffer.Position = offset;
 			buffer.Read(data, 0, size);
 			offset += size;
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return false;
 		}
 
@@ -320,7 +322,8 @@ public class Serializer {
 			buffer.Position = offset;
 			buffer.Write(data, 0, size);
 			offset += size;
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return false;
 		}
 
@@ -332,7 +335,8 @@ public class Serializer {
 			buffer.Position = offset;
 			buffer.Read(data, 0, size);
 			offset += size;
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return false;
 		}
 
@@ -344,7 +348,8 @@ public class Serializer {
 			buffer.Position = offset;
 			buffer.Write(data, 0, size);
 			offset += size;
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return false;
 		}
 

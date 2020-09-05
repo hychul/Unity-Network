@@ -32,7 +32,6 @@ public class TalkPacket : IPacket {
 	}
 
 	public byte[] GetData() {
-        NetworkLogger.Log("GetData");
 		TalkSerializer serializer = new TalkSerializer();
 
 		serializer.Serialize(talk);

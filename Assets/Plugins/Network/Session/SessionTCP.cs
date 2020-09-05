@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Sockets;
 
@@ -8,7 +9,8 @@ public class SessionTCP : Session<TransportTCP> {
 			this.listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 			this.listener.Bind(new IPEndPoint(IPAddress.Any, port));
 			this.listener.Listen(connectionMax);
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return false;
 		}
 
@@ -36,7 +38,8 @@ public class SessionTCP : Session<TransportTCP> {
 				transport.Initialize(socket);
 				transport.transportName = "serverSocket";
 				node = JoinSession(transport);
-			} catch {
+			} catch (Exception e) {
+				NetworkLogger.Log(e.ToString());
 				return;
 			}
 

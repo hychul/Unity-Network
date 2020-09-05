@@ -169,7 +169,8 @@ public abstract class Session<T> where T : ITransport, new() {
 			lock (this.transportLock) {
 				this.transports.Add(node, transport);
 			}
-		} catch { 
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString()); 
 			return -1;
 		}
 		
@@ -288,7 +289,8 @@ public abstract class Session<T> where T : ITransport, new() {
 		try {
 			T transport = (T) this.transports[node];
 			sendSize = transport.Send(data, size);
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return -1;
 		}
 
@@ -304,7 +306,8 @@ public abstract class Session<T> where T : ITransport, new() {
 		try { 
 			T transport = this.transports[node];
 			recvSize = transport.Receive(ref buffer, buffer.Length);
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return -1;
 		}
 
@@ -322,7 +325,8 @@ public abstract class Session<T> where T : ITransport, new() {
 			this.thread = new Thread(new ThreadStart(ThreadDispatch));
 			this.threadLoop = true;
 			this.thread.Start();
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return false;
 		}
 

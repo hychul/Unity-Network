@@ -93,7 +93,8 @@ public class Network {
 			if (type == ConnectionType.UDP) {
 				sessionUdp.StartServer(port, connectionMax);
 			}
-		} catch {
+		} catch (Exception e) {
+			NetworkLogger.Log(e.ToString());
 			return false;
 		}
 
