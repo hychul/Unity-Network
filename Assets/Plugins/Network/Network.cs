@@ -222,7 +222,7 @@ public class Network {
 
 	// TODO: Receive from all connected nodes
 	public void ReceiveTcp(int node) {
-		byte[] packet = new byte[1400];
+		byte[] packet = new byte[PACKET_SIZE];
 		if (IsConnected(node) == true) {
 			while (sessionTcp.Receive(node, ref packet) > 0) {
 				Receive(node, packet);
@@ -231,7 +231,7 @@ public class Network {
 	}
 
 	public void ReceiveUdp(int node) {
-		byte[] packet = new byte[1400];
+		byte[] packet = new byte[PACKET_SIZE];
 		if (IsConnected(node) == true) {
 			while (sessionUdp.Receive(node, ref packet) > 0) {
 				Receive(node, packet);
