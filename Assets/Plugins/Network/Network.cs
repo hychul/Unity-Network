@@ -220,21 +220,30 @@ public class Network {
 	 * +-------------------------+
 	 */
 
-	// TODO: Receive from all connected nodes
-	public void ReceiveTcp(int node) {
+	public void Receive() {
 		byte[] packet = new byte[PACKET_SIZE];
+
+		foreach (int node in sessionTcp.GetNodes()) {
+			ReceiveTcp(node, packet);
+		}
+
+		foreach (int node in sessionUdp.GetNodes()) {
+			ReceiveUdp(node, packet);
+		}
+	}
+
+	public void ReceiveTcp(int node, byte[] data) {
 		if (IsConnected(node) == true) {
-			while (sessionTcp.Receive(node, ref packet) > 0) {
-				Receive(node, packet);
+			while (sessionTcp.Receive(node, ref data) > 0) {
+				Receive(node, data);
 			}
 		}
 	}
 
-	public void ReceiveUdp(int node) {
-		byte[] packet = new byte[PACKET_SIZE];
+	public void ReceiveUdp(int node, byte[] data) {
 		if (IsConnected(node) == true) {
-			while (sessionUdp.Receive(node, ref packet) > 0) {
-				Receive(node, packet);
+			while (sessionUdp.Receive(node, ref data) > 0) {
+				Receive(node, data);
 			}
 		}
 	}

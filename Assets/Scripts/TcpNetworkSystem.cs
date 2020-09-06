@@ -31,7 +31,7 @@ public class TcpNetworkSystem : MonoBehaviour {
     }
 
     void Update() {
-        network.ReceiveTcp(node);
+        network.Receive();
     }
 
     public void OnStartServerButton() {

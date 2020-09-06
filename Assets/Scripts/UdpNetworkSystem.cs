@@ -29,7 +29,7 @@ public class UdpNetworkSystem : MonoBehaviour {
     }
 
     void Update() {
-        network.ReceiveUdp(node);
+        network.Receive();
     }
 
     public void OnStartServerButton() {

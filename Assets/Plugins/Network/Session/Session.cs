@@ -68,6 +68,10 @@ public abstract class Session<T> where T : ITransport, new() {
 		return this.transports[node].IsConnected();
 	}
 
+	public List<int> GetNodes() {
+		return new List<int>(transports.Keys);
+	}
+
 	public int GetSessionNum() {
 		return this.transports.Count;
 	}
