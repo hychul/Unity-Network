@@ -115,7 +115,7 @@ public class Serializer {
 
 	protected bool Serialize(byte[] element, int length) {
 		if (endianType == EndianType.LittleEndian) {
-			Array.Reverse(element);	
+			Array.Reverse(element);
 		}
 
 		return WriteBuffer(element, length);
@@ -129,7 +129,7 @@ public class Serializer {
 		Buffer.BlockCopy(buffer, 0, data, 0, size);
 
 		if (endianType == EndianType.LittleEndian) {
-			Array.Reverse(data);	
+			Array.Reverse(data);
 		}
 
 		return WriteBuffer(data, data.Length);
@@ -269,7 +269,7 @@ public class Serializer {
 		bool ret = ReadBuffer(ref element, length);
 
 		if (endianType == EndianType.LittleEndian) {
-			Array.Reverse(element);	
+			Array.Reverse(element);
 		}
 
 		if (ret == true) {

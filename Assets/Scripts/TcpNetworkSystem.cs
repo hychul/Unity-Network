@@ -51,7 +51,7 @@ public class TcpNetworkSystem : MonoBehaviour {
         receivedText.text = packet.GetTalk().text;
     }
 
-    void OnNetwork(Network.ConnectionType connectionType, int node, NetworkState networkState) {
-            this.node = node;
+    void OnNetwork(Network.ConnectionType connectionType, NetworkState networkState) {
+            this.node = networkState.node;
     }
 }

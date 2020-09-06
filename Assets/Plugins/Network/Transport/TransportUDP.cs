@@ -9,7 +9,7 @@ public class TransportUDP : ITransport {
 	// Dummy packet data to check connection
 	public const string CONNECTION_CHECK_REQUST_DATA = "KeepAlive.";
 
-	private const int KEEP_ALIVE_INTER = 1; 
+	private const int KEEP_ALIVE_INTER = 1;
 	private const int TIME_OUT_S = 10;
 
 	private int node = -1;
@@ -88,7 +88,7 @@ public class TransportUDP : ITransport {
 	}
 
 	public bool IsConnected() {
-		return	isConnected;
+		return isConnected;
 	}
 
 	public void SubscribeNetworkState(NetworkStateHandler handler) {
@@ -201,7 +201,7 @@ public class TransportUDP : ITransport {
 		if (ts.Seconds > KEEP_ALIVE_INTER || isFirst) {
 			string message = localEndPoint.Address.ToString() + ":" + serverPort + ":" + CONNECTION_CHECK_REQUST_DATA;
 			byte[] request = System.Text.Encoding.UTF8.GetBytes(message);
-			socket.SendTo(request, request.Length, SocketFlags.None, remoteEndPoint);	
+			socket.SendTo(request, request.Length, SocketFlags.None, remoteEndPoint);
 			keepAliveTicker = DateTime.Now;
 			isFirst = false;
 		}
@@ -218,7 +218,7 @@ public class TransportUDP : ITransport {
 
 				int sendSize = sendQueue.Dequeue(ref buffer, buffer.Length);
 				while (sendSize > 0) {
-					socket.SendTo(buffer, sendSize, SocketFlags.None, remoteEndPoint);	
+					socket.SendTo(buffer, sendSize, SocketFlags.None, remoteEndPoint);
 					sendSize = sendQueue.Dequeue(ref buffer, buffer.Length);
 				}
 			}

@@ -76,7 +76,7 @@ public class TransportTCP : ITransport {
     }
 
 	public bool IsConnected() {
-		return	isConnected;
+		return isConnected;
 	}
 
 	public void SubscribeNetworkState(NetworkStateHandler handler) {

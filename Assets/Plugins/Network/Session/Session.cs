@@ -65,7 +65,7 @@ public abstract class Session<T> where T : ITransport, new() {
 			return false;
 		}
 
-		return this.transports[node].IsConnected(); 
+		return this.transports[node].IsConnected();
 	}
 
 	public int GetSessionNum() {
@@ -170,7 +170,7 @@ public abstract class Session<T> where T : ITransport, new() {
 				this.transports.Add(node, transport);
 			}
 		} catch (Exception e) {
-			NetworkLogger.Log(e.ToString()); 
+			NetworkLogger.Log(e.ToString());
 			return -1;
 		}
 		
@@ -179,7 +179,7 @@ public abstract class Session<T> where T : ITransport, new() {
 
 	protected bool LeaveSession(int node) {
 		if (node < 0) {
-			return false;	
+			return false;
 		}
 					
 		T transport = (T) this.transports[node];
@@ -294,7 +294,7 @@ public abstract class Session<T> where T : ITransport, new() {
 			return -1;
 		}
 
-		return sendSize;	
+		return sendSize;
 	}
 	
 	public virtual int Receive(int node, ref byte[] buffer) {
@@ -358,7 +358,7 @@ public abstract class Session<T> where T : ITransport, new() {
 			
 			Dispatch();
 			
-			Thread.Sleep(3);		
+			Thread.Sleep(3);	
 		}
 	}
 

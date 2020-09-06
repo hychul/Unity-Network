@@ -14,7 +14,7 @@ public class Network {
 	public delegate void PacketHandler(int node, int packetType, byte[] data);
 	private Dictionary<int, PacketHandler> packetHandlers = new Dictionary<int, PacketHandler>();
 
-	public delegate void NodeStateHandler(ConnectionType connectionType, int node, NetworkState networkState);
+	public delegate void NodeStateHandler(ConnectionType connectionType1, NetworkState networkState);
 	private NodeStateHandler nodeStateHandler = null;
 
 	public enum ConnectionType {
@@ -51,15 +51,7 @@ public class Network {
 	}
 
 	public bool IsConnected(int node) {
-		if (sessionTcp != null && sessionTcp.IsConnected(node)) {
-			return true;
-		}
-		
-		if (sessionUdp != null && sessionUdp.IsConnected(node)) {
-			return true;
-		}
-
-		return	false;
+		return (sessionTcp?.IsConnected(node) ?? false) || (sessionUdp?.IsConnected(node) ?? false);
 	}
 
 	public bool IsServer() {
@@ -67,7 +59,7 @@ public class Network {
 			return false;
 		}
 
-		return	sessionTcp.IsServer();
+		return sessionTcp.IsServer();
 	}
 
 	public IPEndPoint GetLocalEndPoint(int node) {
@@ -102,13 +94,8 @@ public class Network {
 	}
 
 	public void StopServer() {
-		if (sessionUdp != null) {
-			sessionUdp.StopServer();
-		}
-
-		if (sessionTcp != null) {
-			sessionTcp.StopServer();
-		}
+		sessionTcp?.StopServer();
+		sessionUdp?.StopServer();
 	}
 
 	/*
@@ -120,37 +107,29 @@ public class Network {
 	public int Connect(string address, int port, ConnectionType type) {
 		int node = -1;
 
-		if (type == ConnectionType.TCP && sessionTcp != null) {
-			node = sessionTcp.Connect(address, port);
+		if (type == ConnectionType.TCP) {
+			node = sessionTcp?.Connect(address, port) ?? -1;
 		}
 
-		if (type == ConnectionType.UDP && sessionUdp != null) {
-			node = sessionUdp.Connect(address, port);
+		if (type == ConnectionType.UDP) {
+			node = sessionUdp?.Connect(address, port) ?? -1;
 		}
 
 		return node;
 	}
 
-	public void Disconnect(int node) {	
-		if (sessionTcp != null) {
-			sessionTcp.Disconnect(node);
-		}
-		
-		if (sessionUdp != null) {
-			sessionUdp.Disconnect(node);
-		}
-	}
-
 	public void Disconnect() {
-		if (sessionTcp != null) {
-			sessionTcp.Disconnect();
-		}
-		
-		if ( sessionUdp != null) {
-			sessionUdp.Disconnect();
-		}
+		sessionTcp?.Disconnect();
+
+		sessionUdp?.Disconnect();
 
 		packetHandlers.Clear();
+	}
+
+	public void Disconnect(int node) {
+		sessionTcp?.Disconnect(node);
+
+		sessionUdp?.Disconnect(node);
 	}
 
 	/*
@@ -191,7 +170,7 @@ public class Network {
 			state.node = node;
 			state.type = NetEventType.SendError;
 			state.result = NetEventResult.Failure;
-			nodeStateHandler.Invoke(ConnectionType.TCP, node, state);
+			nodeStateHandler.Invoke(ConnectionType.TCP, state);
 		}
 		
 		return sendSize;
@@ -229,7 +208,7 @@ public class Network {
 			state.node = node;
 			state.type = NetEventType.SendError;
 			state.result = NetEventResult.Failure;
-			nodeStateHandler.Invoke(ConnectionType.UDP, node, state);
+			nodeStateHandler.Invoke(ConnectionType.UDP, state);
 		}
 		
 		return sendSize;
@@ -260,7 +239,6 @@ public class Network {
 		}
 	}
 
-	// TODO: data param need?
 	private void Receive(int node, byte[] data) {
 		PacketHeader header = new PacketHeader();
 		PacketHeaderSerializer headerSerializer = new PacketHeaderSerializer();
@@ -268,10 +246,10 @@ public class Network {
 		bool ret = headerSerializer.Deserialize(data, ref header);
 		if (ret == false) {
 			// Skip invalid header packet
-			return;			
+			return;
 		}
 
-		int packetType = (int) header.type;
+		int packetType = header.type;
 
 		if (packetHandlers.ContainsKey(packetType) &&
 		    packetHandlers[packetType] != null) {
@@ -298,7 +276,7 @@ public class Network {
 		state.node = node;
 		state.type = networkState.type;
 		state.result = NetEventResult.Success;
-		nodeStateHandler.Invoke(ConnectionType.TCP, node, state);
+		nodeStateHandler.Invoke(ConnectionType.TCP, state);
 	}
 	
 	public void OnUdpNodeStateChanged(int node, NetworkState networkState) {
@@ -310,7 +288,7 @@ public class Network {
 		state.node = node;
 		state.type = networkState.type;
 		state.result = NetEventResult.Success;
-		nodeStateHandler.Invoke(ConnectionType.UDP, node, state);
+		nodeStateHandler.Invoke(ConnectionType.UDP, state);
 	}
 
 	public void SetNetworkStateHandler(NodeStateHandler handler) {
