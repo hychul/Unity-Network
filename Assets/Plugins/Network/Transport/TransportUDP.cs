@@ -111,22 +111,12 @@ public class TransportUDP : ITransport {
 		}
 
 		try {
-			string hostname = Dns.GetHostName();
+			localEndPoint = GetIpEndPoint(Dns.GetHostName(), serverPort);
 
-			IPAddress[]	hostAddresses = Dns.GetHostAddresses(hostname);
-			foreach (IPAddress hostAddress in hostAddresses) {
-				if (hostAddress.AddressFamily == AddressFamily.InterNetwork) {
-					localEndPoint = new IPEndPoint(hostAddress, serverPort);
-					break;
-				}
-			}
+			remoteEndPoint = GetIpEndPoint(address, port);
 
-			// TODO: find better way
-			string ipAddress = "localhost".Equals(address) ? "127.0.0.1" : address;
-
-			remoteEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
 			NetworkLogger.Log("[transport udp] local address: " + localEndPoint.Address.ToString() + " port: " + localEndPoint.Port);
-			NetworkLogger.Log("[transport udp] remote address: " + remoteEndPoint.Address.ToString() + " port: " + remoteEndPoint.Port);
+			NetworkLogger.Log("[transport udp] remote address: " + remoteEndPoint.Address.ToString() + " port: " + port);
 			isConnectionRequested = true;
 		} catch (Exception e) {
 			NetworkLogger.Log(e.ToString());
@@ -147,6 +137,17 @@ public class TransportUDP : ITransport {
 		isFirst = true;
 
 		return isConnectionRequested;
+	}
+
+	private IPEndPoint GetIpEndPoint(string hostNameOrAddress, int port) {
+		IPAddress[]	hostAddresses = Dns.GetHostAddresses(hostNameOrAddress);
+		foreach (IPAddress hostAddress in hostAddresses) {
+			if (hostAddress.AddressFamily == AddressFamily.InterNetwork) {
+				return IPAddress.IsLoopback(hostAddress) ? GetIpEndPoint(Dns.GetHostName(), port) : new IPEndPoint(hostAddress, port);
+			}
+		}
+
+		return default(IPEndPoint);
 	}
 
 	public void Disconnect()  {
